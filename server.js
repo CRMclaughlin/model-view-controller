@@ -8,6 +8,8 @@ const helpers = require('./utils/helpers');
 
 const sequelize = require('./config/connection');
 
+const SequelizeStore = require('connect-session-sequelize')
+
 const app = express();
 const PORT = process.env.PORT || 6000;
 
@@ -18,8 +20,8 @@ const sess = {
     secret: process.env.DB_SECRET,
     cookie: {},
     resave: false,
-    saveUnintialized: true,
-    store: new SequelizedStore({
+    saveUninitialized: true,
+    store: new SequelizeStore({
         db: sequelize
     })
 }
