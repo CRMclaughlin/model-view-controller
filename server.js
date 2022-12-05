@@ -11,7 +11,7 @@ const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 6000;
 
 const hbs = exphbs.create({ helpers });
 
@@ -26,7 +26,7 @@ const sess = {
     })
 }
 
-// middleware
+middleware
 app.use(session(sess));
 
 app.engine('handlebars', hbs.engine);
@@ -40,5 +40,5 @@ app.use(routes);
 
 
 sequelize.sync({ force: false }).then(() => {
-    app.listen(PORT, () => console.log('Now Listening'));
+    app.listen(PORT, () => console.log(`Now Listening on ${PORT}`));
 });
