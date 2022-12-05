@@ -1,0 +1,42 @@
+// requires
+const path = require('path');
+const express = require('express');
+const session = require('express-session');
+const exphbs = require('express-handlebars');
+const routes = require('./controllers');
+const helpers = require('./utils/helpers');
+
+const sequelize = require('./config/connection');
+
+const app = express();
+const PORT = process.env.PORT || 6000;
+
+const hbs = exphbs.create({ helpers });
+
+// configures and links a session with the sequelize store
+const sess = {
+    secret: process.env.DB_SECRET,
+    cookie: {},
+    resave: false,
+    saveUnintialized: true,
+    store: new SequelizedStore({
+        db: sequelize
+    })
+}
+
+// middleware
+app.use(session(sess));
+
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(routes)
+
+
+sequelize.sync({ force: false }).then(() => {
+    app.listen(PORT, () => console.log('Now Listening'));
+});
